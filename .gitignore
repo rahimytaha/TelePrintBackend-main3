@@ -1,0 +1,11 @@
+node_modules
+gallery
+blog
+.env.local
+.vscode
+src.zip
+logs
+./logs
+files
+./pdf
+pdf

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>tele.inline</title>
+    <style>
+        @font-face {
+            font-family: "poppins";
+            src: url(./font/Poppins/Poppins-Regular.ttf);
+        }
+
+        body {
+            font-family: "poppins";
+            color: black;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 0;
+            border: 1px solid black;
+            color: black;
+        }
+
+        td {
+            text-align: center;
+            border-right: 0.1px solid black;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="width:100%; display: flex; justify-content: center;">
+        <div style="width:90%; margin-top: 30px;">
+            <div style="width: 100%; float:right">
+                <div style="direction: rtl;">
+                    <img src="cid:logo" alt="" width='220px' />
+                </div>
+                <div style="direction: rtl; font-size: 20.5px; letter-spacing: 0.3px;">TELEprint Digitaldruck KG</div>
+            </div>
+            <div style="margin-top: 50px;">
+                <div style="font-size: 0.8em;">
+                    TELEprint Digitaldruck KG | Westbahnstraße 9 | 1070 Wien
+                </div>
+                <div style="margin-top: 10px;">
+                    <div>
+                        <span>Name :</span>
+                        <span>{{firstName}} {{lastName}}</span>
+                    </div>
+                    <div>
+                        <span>Adresse:</span>
+                        <span>{{address}} </span>
+                    </div>
+                    <!-- <div>
+                        <span>UID Nummer:</span>
+                        <input type="text" style="border: none;">
+                    </div> -->
+                </div>
+            </div>
+            <div style="font-size: 20px; font-weight: bold; margin-top: 80px;">
+                Rechnung
+            </div>
+            <div style=" width: 100%; margin-top: 20px;">
+                <span
+                    style="float:left; border: 1px solid black; border-radius: 15px; width: 200px; text-align: center;">
+                    <div
+                        style="border-bottom: 1px solid black; font-weight: bold; padding-top: 5px; line-height: 21px;">
+                        Rechnungsnummer</div>
+                    <div>R-{{invoiceNumber}}</div>
+                </span>
+                <span
+                    style="float: right; border: 1px solid black; border-radius: 15px; width: 200px; text-align: center;">
+                    <div
+                        style="border-bottom: 1px solid black; font-weight: bold; padding-top: 5px; line-height: 21px;">
+                        Datum</div>
+                    <div>{{createdAt}}</div>
+                </span>
+            </div>
+            <div style=" width: 100%; margin-top: 30px; float: left;">
+                <div style="display: block; font-size: 16px; padding-left: 6px;">
+                    Herzlichen Dank für lhren Auftrag. Wir erlauben uns folgende Beträge in Rechnung zu stellen:
+                </div>
+            </div>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td style="border-bottom: 1px solid black; text-align: left; padding-left: 6px; width: 60%;">
+                            Beschreibung</td>
+                        <td style="border-bottom: 1px solid black; width: 11.7%">Menge</td>
+                        <!-- <td style="border-bottom: 1px solid black; width: 11.67%">Preis</td> -->
+                        <td
+                            style="border-bottom: 1px solid black; border-right: none; text-align: right; width: 20%;padding-right: 6px;">
+                            Netto</td>
+                    </tr>
+                    {{#each orderIds}}
+                    <tr style="min-height: 100px;">
+                        <td style="text-align: left; padding-left: 6px;">
+                            <span style="font-weight: bold; font-size: 16px;">{{productName}}</span>
+                            <!-- <span style="text-align: left; padding-left: 6px;">
+                                3 Stk. A4 Spiralbücher á 175 Seiten 4/4c 120g
+                            </span> -->
+                        </td>
+                        <td>{{tableId.count}}</td>
+                        <!-- <td>{{tableId.finalPrice}} €</td> -->
+                        <td style="border:none; text-align: right; padding-right: 3px;">{{tableId.finalPrice}} €</td>
+                    </tr>
+                    {{/each}}
+
+
+                </tbody>
+            </table>
+            <div style=" width: 100%; margin-top: 20px; font-size: 17px;">
+                <span style=" padding-left: 6px;">Summe netto</span>
+                <span style="float: right;">{{subTotal}} €</span>
+            </div>
+            <div style=" width: 100%; font-size: 17px;">
+                <span style="padding-left: 6px;">+20% USt (von {{subTotal}} €)</span>
+                <span style="float: right;">{{tax}} €</span>
+            </div>
+            <div style="border-bottom: 1px solid black; width: 100%;"></div>
+            <div style="border-bottom: 1px solid black; width: 100%; margin-top: 4px;"></div>
+            <div style=" width: 100%; font-size: 17px; font-weight: bold; margin-top: 10px;">
+                <span style="padding-left: 6px;">Gesamt brutto</span>
+                <span style="float: right;">{{totalPayment}} €</span>
+            </div>
+            <div style="text-align: left; padding-left: 6px; line-height: 50px; padding-bottom: 60px;">
+                bestellt am 29.11.21 von Frau Valerie Bartonik
+            </div>
+        </div>
+    </div>
+    <div style="width:100%; display: flex; justify-content: center; margin-top: 300px; padding-bottom: 20px;">
+        <div style="width:95%;">
+            <div style="font-size:16px; font-weight: bold;">
+                Wir hoffen, den Auftrag zu lhrer Zufriedenheit ausgeführt zu haben und freuen uns auf eine weitere
+                Zusammenarbeit.
+            </div>
+            <div
+                style="min-height:40px;width:85%; font-size: 14px; font-weight: 700; line-height: 18px; margin-top: 10px;">
+                Zahlungskonditionen: Wenn nicht anders vereinbart, innerhalb von 10 Tagen nach Rechnungserhalt. Bei
+                Zahlungsverzug gelten Verzugszinsen in Höhe von
+                11% p.a. inklusive sämtlicher Mahn- und inkassospesen als vereinbart. Erfüllungsort und Gerichtsstand:
+                Wien. im übrigen gelten unsere Allgemeinen
+                Geschäftsbedingungen, einsehbar auf unserer Website.
+            </div>
+            <div style="min-height:20px; font-size: 14px; font-weight: 700; line-height: 18px; margin-top: 10px;">
+                Bankverbindung: Erste Bank <span style="color:#ee7f01; font-size: 30px;">.</span>
+                IBAN: AT94 2011 1825 1071 3100 <span style="color:#ee7f01; font-size: 30px;">.</span>
+                BIC: GIBAATWWXXX
+            </div>
+            <div
+                style="min-height:40px;min-width: 100%; font-size: 14px; font-weight: 700; line-height: 18px; margin-top: 10px;">
+                Westbahnstr. 9 <span style="color:#ee7f01; font-size: 30px;">.</span>
+                1070 Wien <span style="color:#ee7f01; font-size: 30px;">.</span>
+                Österreich <span style="color:#ee7f01; font-size: 30px;">.</span>
+                Tel. +43 1 524 32 56 <span style="color:#ee7f01; font-size: 30px;">.</span>
+                Handelsgericht Wien <span style="color:#ee7f01; font-size: 30px;">.</span>
+                FN 479000 m <span style="color:#ee7f01; font-size: 30px;">.</span>
+                UID: ATU 7292 0226
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
