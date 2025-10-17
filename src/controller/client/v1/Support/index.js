@@ -8,6 +8,7 @@ const { sendSupport } = require("../../../../util/nodeMailer")
 const { paginationTools } = require("../../../../util")
 
 const { GeneralFront } = require("../../../../log")
+const { default: Axios } = require("axios")
 const nextcloudUrl = 'https://cloud.teleprint.at/remote.php/dav/files/storageshare/Teleprint/Customers/';
 const username = 'storageshare';
 const password = '$SPyOME~PHdB8WM~';
@@ -17,24 +18,45 @@ module.exports = new (class SupportController extends BaseController {
     try {
 
       const file = req.files;
-
-      const createFolder = await fetch(nextcloudUrl+`${req.body.firstName} ${req.body.lastName}`, {
-        method: 'MKCOL', 
+      let link1 = undefined
+      let link2 = undefined
+      const createFolder = await fetch(nextcloudUrl + `${req.body.firstName} ${req.body.lastName}`, {
+        method: 'MKCOL',
         headers: {
           'Authorization': 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),
-          'Content-Length': 0, 
+          'Content-Length': 0,
         },
       })
 
       if (file.file1) {
-        const response = await fetch(`${nextcloudUrl}${req.body.firstName} ${req.body.lastName}/File1.${file.file1[0].originalname.split(".").pop()}`, {
+        await fetch(`${nextcloudUrl}${req.body.firstName} ${req.body.lastName}/File1.${file.file1[0].originalname.split(".").pop()}`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),
           },
           body: file.file1[0].buffer,
         });
-        console.log(response)
+
+
+        const response2 = await Axios.post(`https://cloud.teleprint.at/ocs/v2.php/apps/files_sharing/api/v1/shares`,
+          new URLSearchParams({
+            path: `/Teleprint/Customers/${req.body.firstName} ${req.body.lastName}/File1.${file.file1[0].originalname.split(".").pop()}`,
+            shareType: '3', // 3 = public link
+            permissions: '1' // 1 = read-only
+          }),
+          {
+            headers: {
+              'OCS-APIRequest': 'true'
+            },
+            auth: {
+              username: username,
+              password: password
+
+            }
+          }
+        );
+        link1 = response2.data.ocs.data.url || undefined
+
       }
       if (file.file2) {
         const response = await fetch(`${nextcloudUrl}${req.body.firstName} ${req.body.lastName}/File2.${file.file2[0].originalname.split(".").pop()}`, {
@@ -44,7 +66,24 @@ module.exports = new (class SupportController extends BaseController {
           },
           body: file.file2[0].buffer,
         });
-        console.log(response)
+        const response2 = await Axios.post(`https://cloud.teleprint.at/ocs/v2.php/apps/files_sharing/api/v1/shares`,
+          new URLSearchParams({
+            path: `/Teleprint/Customers/${req.body.firstName} ${req.body.lastName}/File2.${file.file2[0].originalname.split(".").pop()}`,
+            shareType: '3', // 3 = public link
+            permissions: '1' // 1 = read-only
+          }),
+          {
+            headers: {
+              'OCS-APIRequest': 'true'
+            },
+            auth: {
+              username: username,
+              password: password
+
+            }
+          }
+        );
+        link2 = response2.data.ocs.data.url || undefined
       }
 
 
@@ -58,8 +97,8 @@ module.exports = new (class SupportController extends BaseController {
         product: req.body.product,
         description: req.body.description,
         count: req.body.count,
-        file1: req.files && req.files.file1 && req.files.file1[0] ? BASE_URL_FOR_MULTER + "/files/" + req.files.file1[0].filename : "",
-        file2: req.files && req.files.file2 && req.files.file2[0] ? BASE_URL_FOR_MULTER + "/files/" + req.files.file2[0].filename : ""
+        file1: link1,
+        file2: link2
       }
       const CreatedFlyerOrder = await SupportService.createObject(Object)
 
